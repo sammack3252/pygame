@@ -23,4 +23,5 @@ you can play mini-games to earn coins and earn food for your pet to make the car
 Some special features of the game include playing multiple mini-games such as the snake game and being able to buy cute accessories. 
 
 **Credits/citations:**
+Icons - Penzilla (https://penzilla.itch.io/vector-icon-pack)
 
