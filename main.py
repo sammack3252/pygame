@@ -7,9 +7,8 @@ from enum import Enum
 
 scriptDir = os.path.dirname(os.path.abspath(__file__))
 
-BLUE = (106, 159, 181)
-WHITE = (255, 255, 255)
-
+PINK = (227, 193, 232)
+BROWN = (125, 110, 79)
 
 def create_surface_with_text(text, font_size, text_rgb, bg_rgb):
     #returns surface with text written on
@@ -77,6 +76,13 @@ class UIElement(Sprite):
         #draws element onto a surface
         surface.blit(self.image, self.rect)
 
+class Button:
+    def __init__(self, x, y, image_name):
+        self.x = x
+        self.y = y
+        self.image = image_name
+        self.rect = self.image.get_rect()
+        self.image_rect = pygame.Rect(x - self.rect.width/2, y - self.rect.height/2, self.rect.width, self.rect.height)
 
 def main():
     pygame.init()
@@ -91,6 +97,9 @@ def main():
 
         if game_state == GameState.NEWGAME:
             game_state = play(screen)
+        
+        if game_state == GameState.CREDITS:
+            game_state = credits(screen)
 
         if game_state == GameState.QUIT:
             pygame.quit()
@@ -101,21 +110,23 @@ def title_screen(screen):
     start_btn = UIElement(
         center_position=(250, 300),
         font_size=30,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=PINK,
+        text_rgb=BROWN,
         text="Start",
         action=GameState.NEWGAME,
     )
+
     quit_btn = UIElement(
         center_position=(250, 400),
         font_size=30,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=PINK,
+        text_rgb=BROWN,
         text="Quit",
         action=GameState.QUIT,
     )
 
     buttons = [start_btn, quit_btn]
+    #snakey
 
     #main loop
     while True:
@@ -123,7 +134,7 @@ def title_screen(screen):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_up = True
-        screen.fill(BLUE)
+        screen.fill(PINK)
 
         for button in buttons:
             ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
@@ -136,19 +147,11 @@ def title_screen(screen):
 
 #everything to do w the actual game vv
 
-class Button:
-    def __init__(self, x, y, image_name):
-        self.x = x
-        self.y = y
-        self.image = image_name
-        self.rect = self.image.get_rect()
-        self.image_rect = pygame.Rect(x - self.rect.width/2, y - self.rect.height/2, self.rect.width, self.rect.height)
-
 class Game:
     def __init__(self):
         self.width = 500
         self.height = 500
-        self.background_color = "white"
+        self.background_color = "PINK"
         self.buttons_bar_height = 100
         self.buttons_bar_color = "orange"
 
@@ -175,6 +178,12 @@ class Game:
         statsIcon = pygame.transform.scale(statsIcon, (75, 75))
         self.stats_button = Button((self.width/8 * 7), self.buttons_bar_height/2, statsIcon)
 
+
+        #snakey
+        snakeIcon = pygame.image.load(os.path.join(scriptDir, "graphics", "snakey.png"))
+        snakeIcon = pygame.transform.scale(snakeIcon, (400, 400))
+        self.snake_button = Button((250), 300, snakeIcon)
+
     def draw_everything(self):
         self.screen.fill(self.background_color)
         pygame.draw.rect(self.screen, self.buttons_bar_color, pygame.Rect(0, 0, self.width, self.buttons_bar_height))
@@ -182,6 +191,7 @@ class Game:
         self.screen.blit(self.cart_button.image, self.cart_button.image_rect)
         self.screen.blit(self.hanger_button.image, self.hanger_button.image_rect)
         self.screen.blit(self.stats_button.image, self.stats_button.image_rect)
+        self.screen.blit(self.snake_button.image, self.snake_button.image_rect)
 
         pygame.display.update()
     
@@ -199,8 +209,8 @@ def play(screen):
     return_btn = UIElement(
         center_position=(140, 570),
         font_size=20,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=PINK,
+        text_rgb=BROWN,
         text="Return to main menu",
         action=GameState.TITLE,
     )
@@ -212,12 +222,11 @@ def play(screen):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_up = True
-        screen.fill(BLUE)
+        screen.fill(PINK)
 
         ui_action = return_btn.update(pygame.mouse.get_pos(), mouse_up)
         if ui_action is not None:
             return ui_action
-        return_btn.draw(screen)
 
         pygame.display.flip()
 
@@ -228,6 +237,7 @@ class GameState(Enum):
     QUIT = -1
     TITLE = 0
     NEWGAME = 1
+    CREDITS = 2
 
 #call main when the script is run
 if __name__ == "__main__":
