@@ -1,5 +1,8 @@
 import pygame
 import random
+import os.path
+
+scriptDir = os.path.dirname(os.path.abspath(__file__))
 
 # Initialize pygame
 pygame.init()
@@ -20,7 +23,7 @@ pygame.display.set_caption("Snake Game")
 clock = pygame.time.Clock()
 
 # Load snake image
-snake_image = pygame.image.load(r'C:\Users\flowi\Downloads\snakey.png')
+snake_image = pygame.image.load(os.path.join(scriptDir, "graphics", "snakey.png"))
 snake_image = pygame.transform.scale(snake_image, (CELL_SIZE, CELL_SIZE))
 
 # Helper functions
