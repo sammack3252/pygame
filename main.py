@@ -32,11 +32,7 @@ class UIElement(Sprite):
         """
         self.mouse_over = False #indicates if the mouse is over the element
         #create the default image
-def create_surface_with_text(text, font_size, text_rgb, bg_rgb):
-    #returns surface with text written on
-    font = pygame.freetype.SysFont("Courier", font_size, bold=True)
-    surface, _ = font.render(text=text, fgcolor=text_rgb, bgcolor=bg_rgb)
-    return surface.convert_alpha()
+
 class UIElement(Sprite):
     #a user interface element that can be added to a surface
     def __init__(self, center_position, text, font_size, bg_rgb, text_rgb, action=None):
@@ -87,13 +83,13 @@ class UIElement(Sprite):
         #draws element onto a surface
         surface.blit(self.image, self.rect)
 
-# class Button:
-#     def __init__(self, x, y, image_name):
-#         self.x = x
-#         self.y = y
-#         self.image = image_name
-#         self.rect = self.image.get_rect()
-#         self.image_rect = pygame.Rect(x - self.rect.width/2, y - self.rect.height/2, self.rect.width, self.rect.height)
+class Button:
+    def __init__(self, x, y, image_name):
+        self.x = x
+        self.y = y
+        self.image = image_name
+        self.rect = self.image.get_rect()
+        self.image_rect = pygame.Rect(x - self.rect.width/2, y - self.rect.height/2, self.rect.width, self.rect.height)
 
 def main():
     pygame.init()
@@ -164,36 +160,39 @@ class Game:
         pygame.display.set_caption("Python Pal")
         self.clock_tick = 60
         self.clock = pygame.time.Clock()
+        
+        
         #icons
-        #food_surface = pygame.Surface((75, 75))
         foodIcon = pygame.image.load(os.path.join(scriptDir, "graphics", "Icon_Food.png"))
         foodIcon = pygame.transform.scale(foodIcon, (75, 75))
-        food_rect = foodIcon.get_rect()
+        self.food_button = Button((self.width/8), self.buttons_bar_height/2, foodIcon)
 
-        # cartIcon = pygame.image.load(os.path.join(scriptDir, "graphics", "Icon_Cart.png"))
-        # cartIcon = pygame.transform.scale(cartIcon, (75, 75))
-        # self.cart_button = Button((self.width/8 * 3), self.buttons_bar_height/2, cartIcon)
-        # hangerIcon = pygame.image.load(os.path.join(scriptDir, "graphics", "Icon_Hanger.png"))
-        # hangerIcon = pygame.transform.scale(hangerIcon, (75, 75))
-        # self.hanger_button = Button((self.width/8 * 5), self.buttons_bar_height/2, hangerIcon)
-        # statsIcon = pygame.image.load(os.path.join(scriptDir, "graphics", "Icon_Stats.png"))
-        # statsIcon = pygame.transform.scale(statsIcon, (75, 75))
-        # self.stats_button = Button((self.width/8 * 7), self.buttons_bar_height/2, statsIcon)
+        cartIcon = pygame.image.load(os.path.join(scriptDir, "graphics", "Icon_Cart.png"))
+        cartIcon = pygame.transform.scale(cartIcon, (75, 75))
+        self.cart_button = Button((self.width/8 * 3), self.buttons_bar_height/2, cartIcon)
+        
+        hangerIcon = pygame.image.load(os.path.join(scriptDir, "graphics", "Icon_Hanger.png"))
+        hangerIcon = pygame.transform.scale(hangerIcon, (75, 75))
+        self.hanger_button = Button((self.width/8 * 5), self.buttons_bar_height/2, hangerIcon)
+        
+        statsIcon = pygame.image.load(os.path.join(scriptDir, "graphics", "Icon_Stats.png"))
+        statsIcon = pygame.transform.scale(statsIcon, (75, 75))
+        self.stats_button = Button((self.width/8 * 7), self.buttons_bar_height/2, statsIcon)
 
 
         #snakey
-        # snakeIcon = pygame.image.load(os.path.join(scriptDir, "graphics", "snakey.png"))
-        # snakeIcon = pygame.transform.scale(snakeIcon, (400, 400))
-        # self.snake_button = Button((250), 300, snakeIcon)
+        snakeIcon = pygame.image.load(os.path.join(scriptDir, "graphics", "snakey.png"))
+        snakeIcon = pygame.transform.scale(snakeIcon, (400, 400))
+        self.snake_button = Button((250), 300, snakeIcon)
 
     def draw_everything(self):
         self.screen.fill(self.background_color)
         pygame.draw.rect(self.screen, self.buttons_bar_color, pygame.Rect(0, 0, self.width, self.buttons_bar_height))
-        self.screen.blit(self.foodIcon, self.food_rect)
-        # self.screen.blit(self.cart_button.image, self.cart_button.image_rect)
-        # self.screen.blit(self.hanger_button.image, self.hanger_button.image_rect)
-        # self.screen.blit(self.stats_button.image, self.stats_button.image_rect)
-        # self.screen.blit(self.snake_button.image, self.snake_button.image_rect)
+        self.screen.blit(self.food_button.image, self.food_button.image_rect)
+        self.screen.blit(self.cart_button.image, self.cart_button.image_rect)
+        self.screen.blit(self.hanger_button.image, self.hanger_button.image_rect)
+        self.screen.blit(self.stats_button.image, self.stats_button.image_rect)
+        self.screen.blit(self.snake_button.image, self.snake_button.image_rect)
 
         pygame.display.update()
 
@@ -224,9 +223,7 @@ def play(screen):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if food_button.image_rect.collidepoint(event.pos):
-                    print("food button clicked")
-        screen.fill(PINK)
+                screen.fill(PINK)
         ui_action = return_btn.update(pygame.mouse.get_pos(), mouse_up)
         if ui_action is not None:
             return ui_action
