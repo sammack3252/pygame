@@ -8,31 +8,20 @@ from enum import Enum
 
 scriptDir = os.path.dirname(os.path.abspath(__file__))
 
+#static variables
 PINK = (227, 193, 232)
 BROWN = (125, 110, 79)
 WIDTH = 500
 HEIGHT = 500
 
+#used for the title screen
 def create_surface_with_text(text, font_size, text_rgb, bg_rgb):
     #returns surface with text written on
     font = pygame.freetype.SysFont("Courier", font_size, bold=True)
     surface, _ = font.render(text=text, fgcolor=text_rgb, bgcolor=bg_rgb)
     return surface.convert_alpha()
-class UIElement(Sprite):
-    #a user interface element that can be added to a surface
-    def __init__(self, center_position, text, font_size, bg_rgb, text_rgb, action=None):
-        """
-        args:
-            center_position - tuple (x, y)
-            text - string of text to write
-            font_size - int
-            bg_rgb (background colour) - tuple (r, g, b)
-            text_rgb (text colour) - tuple (r, g, b)
-            action - the gamestate change associated with this button
-        """
-        self.mouse_over = False #indicates if the mouse is over the element
-        #create the default image
 
+#text buttons in title screen
 class UIElement(Sprite):
     #a user interface element that can be added to a surface
     def __init__(self, center_position, text, font_size, bg_rgb, text_rgb, action=None):
@@ -83,6 +72,7 @@ class UIElement(Sprite):
         #draws element onto a surface
         surface.blit(self.image, self.rect)
 
+#for icons in screen w snake
 class Button:
     def __init__(self, x, y, image_name):
         self.x = x
@@ -91,6 +81,7 @@ class Button:
         self.rect = self.image.get_rect()
         self.image_rect = pygame.Rect(x - self.rect.width/2, y - self.rect.height/2, self.rect.width, self.rect.height)
 
+#beginning game state
 def main():
     pygame.init()
     screen = pygame.display.set_mode((500, 500))
@@ -109,6 +100,7 @@ def main():
         if game_state == GameState.QUIT:
             pygame.quit()
             return
+
 def title_screen(screen):
     start_btn = UIElement(
         center_position=(250, 300),
@@ -129,7 +121,6 @@ def title_screen(screen):
     )
 
     buttons = [start_btn, quit_btn]
-    #snakey
 
     #main loop
     while True:
@@ -205,6 +196,8 @@ class Game:
                 
             self.draw_everything()
             self.clock.tick(self.clock_tick)
+            
+#running actual game
 def play(screen):
     return_btn = UIElement(
         center_position=(140, 570),
