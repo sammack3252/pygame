@@ -54,11 +54,13 @@ def move_snake(snake, direction):
     snake.insert(0, new_head)
     return snake
 
+#spawns a new food
 def generate_food():
     x = random.randint(0, (WIDTH - CELL_SIZE) // CELL_SIZE) * CELL_SIZE
     y = random.randint(0, (HEIGHT - CELL_SIZE) // CELL_SIZE) * CELL_SIZE
     return (x, y)
 
+#sees if snake hit a wall
 def check_collision(snake):
     head_x, head_y = snake[0]
     # Check if snake hits the screen boundaries
